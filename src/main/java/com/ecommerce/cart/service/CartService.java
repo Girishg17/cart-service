@@ -6,4 +6,5 @@ import com.ecommerce.cart.response.CartResponse;
 public interface CartService {
     CartResponse getCartByUserId(Long userId);
     String addToCart(Long userId, CartItemDto cartItemDTO);
+    void removeFromCart(Long userId, Long productId);
 }

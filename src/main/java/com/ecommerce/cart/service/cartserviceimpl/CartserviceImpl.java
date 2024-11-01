@@ -83,6 +83,12 @@ public class CartserviceImpl implements CartService {
         return "Product added to cart successfully";
     }
 
+    public void removeFromCart(Long userId, Long productId) {
+        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Cart not found"));
+        cart.getItems().removeIf(item -> item.getProductId().equals(productId));
+        cartRepository.save(cart);
+    }
+
     private Cart createNewCart(Long userId) {
         Cart cart = new Cart();
         cart.setUserId(userId);
