@@ -4,6 +4,7 @@ import com.ecommerce.cart.model.dto.CartItemDto;
 import com.ecommerce.cart.model.dto.ProductDto;
 import com.ecommerce.cart.model.entity.Cart;
 import com.ecommerce.cart.model.entity.CartItem;
+import com.ecommerce.cart.repository.CartItemRepository;
 import com.ecommerce.cart.repository.CartRepository;
 import com.ecommerce.cart.response.CartItemResponse;
 import com.ecommerce.cart.response.CartResponse;
@@ -20,6 +21,9 @@ import java.util.Optional;
 public class CartserviceImpl implements CartService {
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private CartItemRepository cartItemRepository;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -88,6 +92,18 @@ public class CartserviceImpl implements CartService {
         cart.getItems().removeIf(item -> item.getProductId().equals(productId));
         cartRepository.save(cart);
     }
+
+    public void updateCartItem(Long userId, Long productId, Integer quantity) {
+        Cart cart = cartRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("Cart not found"));
+        CartItem cartItem = cart.getItems().stream()
+                .filter(item -> item.getProductId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Product not found in cart"));
+
+        cartItem.setQuantity(quantity);
+        cartItemRepository.save(cartItem);
+    }
+
 
     private Cart createNewCart(Long userId) {
         Cart cart = new Cart();

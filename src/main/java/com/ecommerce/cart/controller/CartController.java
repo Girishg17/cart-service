@@ -1,6 +1,7 @@
 package com.ecommerce.cart.controller;
 
 import com.ecommerce.cart.model.dto.CartItemDto;
+import com.ecommerce.cart.request.QuantityReq;
 import com.ecommerce.cart.response.CartResponse;
 import com.ecommerce.cart.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,14 @@ public class CartController {
     @DeleteMapping("/{userId}/remove/{productId}")
     public void removeFromCart(@PathVariable Long userId, @PathVariable Long productId) {
         cartService.removeFromCart(userId, productId);
+    }
+    @PutMapping("/{userId}/update/{productId}")
+    public void updateCartItem(@PathVariable Long userId, @PathVariable Long productId, @RequestBody QuantityReq quantityReq) {
+        Integer q = quantityReq.getQuantity();
+        if (q > 0) {
+            cartService.updateCartItem(userId, productId, q);
+        } else {
+            cartService.removeFromCart(userId, productId);
+        }
     }
 }
