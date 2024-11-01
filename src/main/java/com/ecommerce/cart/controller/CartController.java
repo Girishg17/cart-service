@@ -31,6 +31,7 @@ public class CartController {
     public void removeFromCart(@PathVariable Long userId, @PathVariable Long productId) {
         cartService.removeFromCart(userId, productId);
     }
+
     @PutMapping("/{userId}/update/{productId}")
     public void updateCartItem(@PathVariable Long userId, @PathVariable Long productId, @RequestBody QuantityReq quantityReq) {
         Integer q = quantityReq.getQuantity();

@@ -105,6 +105,21 @@ public class CartserviceImpl implements CartService {
     }
 
 
+    //other
+    public List<CartItem> cartItemofUser(Long userId) {
+        List<CartItem> cart = cartRepository.findByUserId(userId).get().getItems();
+        return cart;
+    }
+
+    public Long getCartId(Long userId) {
+        return cartRepository.findByUserId(userId).get().getId();
+    }
+
+
+    public void deleteCart(Long cartId) {
+        cartRepository.deleteById(cartId);
+    }
+
     private Cart createNewCart(Long userId) {
         Cart cart = new Cart();
         cart.setUserId(userId);
