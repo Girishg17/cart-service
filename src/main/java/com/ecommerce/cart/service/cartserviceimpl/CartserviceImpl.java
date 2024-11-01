@@ -1,5 +1,6 @@
 package com.ecommerce.cart.service.cartserviceimpl;
 
+import com.ecommerce.cart.model.dto.CartItemDto;
 import com.ecommerce.cart.model.dto.ProductDto;
 import com.ecommerce.cart.model.entity.Cart;
 import com.ecommerce.cart.model.entity.CartItem;
@@ -53,6 +54,41 @@ public class CartserviceImpl implements CartService {
 
         return cartResponse; // Return the cart response
     }
+
+    public String addToCart(Long userId, CartItemDto cartItemDTO) {
+        Cart cart = cartRepository.findByUserId(userId).orElseGet(() -> createNewCart(userId));
+        if (cart == null) {
+            return "Cart could not be created";
+        }
+
+//        Product product = productRepository.findById(cartItemDTO.getProductId())
+//                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        boolean productExistsInCart = cart.getItems().stream()
+                .anyMatch(item -> item.getProductId().equals(cartItemDTO.getProductId()));
+
+        if (productExistsInCart) {
+            return "Product already in cart";
+        }
+
+
+        CartItem cartItem = new CartItem();
+        cartItem.setProductId(cartItemDTO.getProductId());
+        cartItem.setQuantity(cartItemDTO.getQuantity());
+        cartItem.setCart(cart);
+
+        cart.getItems().add(cartItem);
+        cartRepository.save(cart);
+
+        return "Product added to cart successfully";
+    }
+
+    private Cart createNewCart(Long userId) {
+        Cart cart = new Cart();
+        cart.setUserId(userId);
+        return cartRepository.save(cart);
+    }
+
 
     private ProductDto fetchProductById(Long ProductId)
     {
