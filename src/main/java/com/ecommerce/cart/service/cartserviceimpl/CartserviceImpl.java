@@ -129,7 +129,7 @@ public class CartserviceImpl implements CartService {
 
     private ProductDto fetchProductById(Long ProductId)
     {
-        String url = "http://localhost:8082/product/products/" + ProductId;
+        String url = "http://localhost:8083/product/products/" + ProductId;
         return restTemplate.getForObject(url, ProductDto.class);
     }
 }

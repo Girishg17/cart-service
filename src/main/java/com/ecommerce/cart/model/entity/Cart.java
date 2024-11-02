@@ -1,5 +1,6 @@
 package com.ecommerce.cart.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class Cart {
     private Long id;
     private Long  userId;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<CartItem> items=new ArrayList<>();;
 
     public Long getUserId() {
